@@ -2,7 +2,9 @@
     "name": "test-users-nr",
     "description": "A Node-RED Project",
     "version": "0.0.1",
-    "dependencies": {},
+    "dependencies": {
+        "node-red-contrib-re-postgres": "0.3.4"
+    },
     "node-red": {
         "settings": {
             "flowFile": "flows.json",
