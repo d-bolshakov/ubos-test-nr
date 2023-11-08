@@ -1,0 +1,859 @@
+[
+    {
+        "id": "5a9548067465c281",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "042cd85282827e0a",
+        "type": "subflow",
+        "name": "Subflow 1",
+        "info": "",
+        "in": [],
+        "out": []
+    },
+    {
+        "id": "8e31cbfab805217d",
+        "type": "postgresdb",
+        "cfgname": "test-users-pg",
+        "hostname": "test-users-pg-ubos-p9cgb-test-users-pg.ubos-p9cgb",
+        "port": "5432",
+        "db": "test-users-pg",
+        "ssl": false
+    },
+    {
+        "id": "adaa8fc24bd59c05",
+        "type": "http response",
+        "z": "042cd85282827e0a",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 690,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "1b9786c2d282dfbe",
+        "type": "postgres",
+        "z": "042cd85282827e0a",
+        "postgresdb": "8e31cbfab805217d",
+        "name": "",
+        "output": true,
+        "perrow": false,
+        "rowspermsg": "1",
+        "return_on_error": false,
+        "limit_queries": "0",
+        "limit_by": "payload",
+        "limit_value": "1",
+        "limit_drop_intermediate": false,
+        "limit_drop_if_in_queue": false,
+        "outputs": true,
+        "x": 520,
+        "y": 40,
+        "wires": [
+            [
+                "adaa8fc24bd59c05",
+                "8af3373b3a191832"
+            ]
+        ]
+    },
+    {
+        "id": "f90dcec927f15915",
+        "type": "inject",
+        "z": "042cd85282827e0a",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 40,
+        "wires": [
+            [
+                "54714f9e82a12814"
+            ]
+        ]
+    },
+    {
+        "id": "54714f9e82a12814",
+        "type": "function",
+        "z": "042cd85282827e0a",
+        "name": "create table counties",
+        "func": "msg.payload = `CREATE TABLE countries(\n    id serial PRIMARY KEY,\n    name  TEXT,\n    postal_code TEXT\n)`\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 40,
+        "wires": [
+            [
+                "1b9786c2d282dfbe",
+                "8af3373b3a191832"
+            ]
+        ]
+    },
+    {
+        "id": "8af3373b3a191832",
+        "type": "debug",
+        "z": "042cd85282827e0a",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 520,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "21986c57ae92ec30",
+        "type": "http response",
+        "z": "5a9548067465c281",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 690,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "ba37c01258be3c99",
+        "type": "postgres",
+        "z": "5a9548067465c281",
+        "postgresdb": "8e31cbfab805217d",
+        "name": "",
+        "output": true,
+        "perrow": false,
+        "rowspermsg": "1",
+        "return_on_error": false,
+        "limit_queries": "0",
+        "limit_by": "payload",
+        "limit_value": "1",
+        "limit_drop_intermediate": false,
+        "limit_drop_if_in_queue": false,
+        "outputs": true,
+        "x": 520,
+        "y": 40,
+        "wires": [
+            [
+                "21986c57ae92ec30",
+                "0329281eec602134"
+            ]
+        ]
+    },
+    {
+        "id": "34e4b3ab6d6ded69",
+        "type": "inject",
+        "z": "5a9548067465c281",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 40,
+        "wires": [
+            [
+                "49e58f0796b22731"
+            ]
+        ]
+    },
+    {
+        "id": "49e58f0796b22731",
+        "type": "function",
+        "z": "5a9548067465c281",
+        "name": "create table users",
+        "func": "msg.payload = `CREATE TABLE users(\n    id serial PRIMARY KEY,\n    name  TEXT,\n    age INTEGER,\n    country_id INTEGER REFERENCES countries (id)\n)`\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 40,
+        "wires": [
+            [
+                "ba37c01258be3c99",
+                "0329281eec602134"
+            ]
+        ]
+    },
+    {
+        "id": "0329281eec602134",
+        "type": "debug",
+        "z": "5a9548067465c281",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 520,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "ed292e51088a43da",
+        "type": "http in",
+        "z": "5a9548067465c281",
+        "name": "",
+        "url": "/users/",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 90,
+        "y": 680,
+        "wires": [
+            [
+                "b14b6d4c4b4a64c2"
+            ]
+        ]
+    },
+    {
+        "id": "b14b6d4c4b4a64c2",
+        "type": "function",
+        "z": "5a9548067465c281",
+        "name": "insert new user",
+        "func": "msg.payload = `INSERT INTO users(name, age, country_id)\nVALUES (\n '${msg.payload.name}',\n '${msg.payload.age}', \n '${msg.payload.country_id}')\n returning *\n`\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 680,
+        "wires": [
+            [
+                "1a321f04c79a03b0",
+                "7980c7fd26d8bf81"
+            ]
+        ]
+    },
+    {
+        "id": "1a321f04c79a03b0",
+        "type": "debug",
+        "z": "5a9548067465c281",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 320,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "5b56a8418b8b7d69",
+        "type": "http in",
+        "z": "5a9548067465c281",
+        "name": "",
+        "url": "/users/:id",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 90,
+        "y": 520,
+        "wires": [
+            [
+                "bc5f83e8b162b2e0",
+                "954b9b0e6314907a"
+            ]
+        ]
+    },
+    {
+        "id": "bc5f83e8b162b2e0",
+        "type": "function",
+        "z": "5a9548067465c281",
+        "name": "get one user",
+        "func": "msg.payload = `SELECT users.id, users.name, users.age, countries.name AS country, countries.code FROM users JOIN countries ON users.country_id = countries.id WHERE users.id = '${msg.req.params.id}'`\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 520,
+        "wires": [
+            [
+                "954b9b0e6314907a",
+                "7980c7fd26d8bf81"
+            ]
+        ]
+    },
+    {
+        "id": "954b9b0e6314907a",
+        "type": "debug",
+        "z": "5a9548067465c281",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 300,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "fe5577828d0d074e",
+        "type": "http in",
+        "z": "5a9548067465c281",
+        "name": "",
+        "url": "/users/:id",
+        "method": "put",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 90,
+        "y": 840,
+        "wires": [
+            [
+                "40189d0926c98880",
+                "5a47e088ecead751"
+            ]
+        ]
+    },
+    {
+        "id": "40189d0926c98880",
+        "type": "function",
+        "z": "5a9548067465c281",
+        "name": "update one user",
+        "func": "msg.payload = `UPDATE users\n    SET name = '${msg.payload.name}', age = '${msg.payload.age}', country_id = '${msg.payload.country_id}'\n    WHERE id = '${msg.req.params.id}';`\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 840,
+        "wires": [
+            [
+                "5a47e088ecead751",
+                "7980c7fd26d8bf81"
+            ]
+        ]
+    },
+    {
+        "id": "5a47e088ecead751",
+        "type": "debug",
+        "z": "5a9548067465c281",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 320,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "fd627bd085378ef0",
+        "type": "http in",
+        "z": "5a9548067465c281",
+        "name": "",
+        "url": "/users/:id",
+        "method": "delete",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 1000,
+        "wires": [
+            [
+                "ec02703ae5936a30",
+                "28d889b2a669aefc"
+            ]
+        ]
+    },
+    {
+        "id": "ec02703ae5936a30",
+        "type": "function",
+        "z": "5a9548067465c281",
+        "name": "delete one user",
+        "func": "msg.payload = `DELETE FROM users WHERE id = '${msg.req.params.id}'`\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 1000,
+        "wires": [
+            [
+                "28d889b2a669aefc",
+                "7980c7fd26d8bf81"
+            ]
+        ]
+    },
+    {
+        "id": "28d889b2a669aefc",
+        "type": "debug",
+        "z": "5a9548067465c281",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 320,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "5590987b09d10ac9",
+        "type": "http in",
+        "z": "5a9548067465c281",
+        "name": "",
+        "url": "/users/",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 90,
+        "y": 360,
+        "wires": [
+            [
+                "df3e4d7e648fd3c0",
+                "7bc14b50f5c078da"
+            ]
+        ]
+    },
+    {
+        "id": "df3e4d7e648fd3c0",
+        "type": "function",
+        "z": "5a9548067465c281",
+        "name": "get all users",
+        "func": "msg.payload = `SELECT users.id, users.name, users.age, countries.name AS country, countries.code FROM users JOIN countries ON users.country_id = countries.id`\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 360,
+        "wires": [
+            [
+                "7980c7fd26d8bf81",
+                "7bc14b50f5c078da"
+            ]
+        ]
+    },
+    {
+        "id": "7980c7fd26d8bf81",
+        "type": "postgres",
+        "z": "5a9548067465c281",
+        "postgresdb": "8e31cbfab805217d",
+        "name": "",
+        "output": true,
+        "perrow": false,
+        "rowspermsg": "1",
+        "return_on_error": false,
+        "limit_queries": "0",
+        "limit_by": "payload",
+        "limit_value": "1",
+        "limit_drop_intermediate": false,
+        "limit_drop_if_in_queue": false,
+        "outputs": true,
+        "x": 840,
+        "y": 780,
+        "wires": [
+            [
+                "dcd4de0c1519fe9a",
+                "75ef6596e106df5a"
+            ]
+        ]
+    },
+    {
+        "id": "7bc14b50f5c078da",
+        "type": "debug",
+        "z": "5a9548067465c281",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 300,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "dcd4de0c1519fe9a",
+        "type": "http response",
+        "z": "5a9548067465c281",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1050,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "75ef6596e106df5a",
+        "type": "debug",
+        "z": "5a9548067465c281",
+        "name": "debug postgres",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "42ef583410087601",
+        "type": "http response",
+        "z": "5a9548067465c281",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1470,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "70c333e7b560f76c",
+        "type": "postgres",
+        "z": "5a9548067465c281",
+        "postgresdb": "8e31cbfab805217d",
+        "name": "",
+        "output": true,
+        "perrow": false,
+        "rowspermsg": "1",
+        "return_on_error": false,
+        "limit_queries": "0",
+        "limit_by": "payload",
+        "limit_value": "1",
+        "limit_drop_intermediate": false,
+        "limit_drop_if_in_queue": false,
+        "outputs": true,
+        "x": 1300,
+        "y": 40,
+        "wires": [
+            [
+                "42ef583410087601",
+                "df0e40d119273e31"
+            ]
+        ]
+    },
+    {
+        "id": "7921a4ebd66b35d6",
+        "type": "inject",
+        "z": "5a9548067465c281",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 880,
+        "y": 40,
+        "wires": [
+            [
+                "b2e8d8f8249bc631"
+            ]
+        ]
+    },
+    {
+        "id": "b2e8d8f8249bc631",
+        "type": "function",
+        "z": "5a9548067465c281",
+        "name": "create table counties",
+        "func": "msg.payload = `CREATE TABLE countries(\n    id serial PRIMARY KEY,\n    name  TEXT,\n    code TEXT\n)`\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1100,
+        "y": 40,
+        "wires": [
+            [
+                "70c333e7b560f76c",
+                "df0e40d119273e31"
+            ]
+        ]
+    },
+    {
+        "id": "df0e40d119273e31",
+        "type": "debug",
+        "z": "5a9548067465c281",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1300,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "2073b14deae112ea",
+        "type": "http response",
+        "z": "5a9548067465c281",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1510,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "66ce03bcf31e5253",
+        "type": "postgres",
+        "z": "5a9548067465c281",
+        "postgresdb": "8e31cbfab805217d",
+        "name": "",
+        "output": true,
+        "perrow": false,
+        "rowspermsg": "1",
+        "return_on_error": false,
+        "limit_queries": "0",
+        "limit_by": "payload",
+        "limit_value": "1",
+        "limit_drop_intermediate": false,
+        "limit_drop_if_in_queue": false,
+        "outputs": true,
+        "x": 1340,
+        "y": 280,
+        "wires": [
+            [
+                "2073b14deae112ea",
+                "4449148bfc8940b5"
+            ]
+        ]
+    },
+    {
+        "id": "bfeb9934903ef6e8",
+        "type": "inject",
+        "z": "5a9548067465c281",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 880,
+        "y": 200,
+        "wires": [
+            [
+                "a9d41ec0c5dbf73f",
+                "d77b2abaaf96b7d7",
+                "71e753ca2edf7d89"
+            ]
+        ]
+    },
+    {
+        "id": "a9d41ec0c5dbf73f",
+        "type": "function",
+        "z": "5a9548067465c281",
+        "name": "populate table countries",
+        "func": "msg.payload = `INSERT INTO countries(name, code)\nVALUES (\n 'Ukraine',\n '+380')\n returning *\n`\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 200,
+        "wires": [
+            [
+                "66ce03bcf31e5253",
+                "4449148bfc8940b5"
+            ]
+        ]
+    },
+    {
+        "id": "4449148bfc8940b5",
+        "type": "debug",
+        "z": "5a9548067465c281",
+        "name": "debug 9",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1340,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "d77b2abaaf96b7d7",
+        "type": "function",
+        "z": "5a9548067465c281",
+        "name": "populate table counties",
+        "func": "msg.payload = `INSERT INTO countries(name, code)\nVALUES (\n 'Canada',\n '+1')\n returning *\n`\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 280,
+        "wires": [
+            [
+                "66ce03bcf31e5253",
+                "4449148bfc8940b5"
+            ]
+        ]
+    },
+    {
+        "id": "71e753ca2edf7d89",
+        "type": "function",
+        "z": "5a9548067465c281",
+        "name": "populate table counties",
+        "func": "msg.payload = `INSERT INTO countries(name, code)\nVALUES (\n 'Albania',\n '+355')\n returning *\n`\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 360,
+        "wires": [
+            [
+                "66ce03bcf31e5253",
+                "4449148bfc8940b5"
+            ]
+        ]
+    },
+    {
+        "id": "7ca89ed60d943c1c",
+        "type": "http in",
+        "z": "5a9548067465c281",
+        "name": "",
+        "url": "/countries/",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 1200,
+        "wires": [
+            [
+                "05965951471c919f",
+                "92550579a973125b"
+            ]
+        ]
+    },
+    {
+        "id": "05965951471c919f",
+        "type": "function",
+        "z": "5a9548067465c281",
+        "name": "get all countries",
+        "func": "msg.payload = `SELECT * FROM countries`\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 1200,
+        "wires": [
+            [
+                "92550579a973125b",
+                "7980c7fd26d8bf81"
+            ]
+        ]
+    },
+    {
+        "id": "92550579a973125b",
+        "type": "debug",
+        "z": "5a9548067465c281",
+        "name": "debug 10",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 300,
+        "y": 1280,
+        "wires": []
+    }
+]
